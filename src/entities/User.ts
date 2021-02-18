@@ -1,6 +1,7 @@
-import { IsEmail, Length } from "class-validator";
-import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, Index, CreateDateColumn, UpdateDateColumn} from "typeorm";
+import { IsEmail, Length } from "class-validator"
+import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, Index, CreateDateColumn, UpdateDateColumn, BeforeInsert} from "typeorm"
 
+import bcrypt from "bcrypt"
 @Entity('users')
 export class User extends BaseEntity {
     constructor(user: Partial<User>) {
@@ -30,5 +31,10 @@ export class User extends BaseEntity {
 
     @UpdateDateColumn()
     updatedAt: Date
+
+    @BeforeInsert()
+    async hashPassword(){
+        this.password = await bcrypt.hash(this.password, 6)
+    }
 
 }
