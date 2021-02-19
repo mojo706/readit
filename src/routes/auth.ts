@@ -58,16 +58,16 @@ const login = async (req: Request, res: Response) => {
       return res.status(401).json({password: 'Password is incorrect'})
     }
 
-    const token = jwt.sign({ username }, '4v234j4v23234k23v4ek23dasldjass')
+    const token = jwt.sign({ username }, process.env.JWT_SECRET)
     res.set('Set-Cookie', cookie.serialize('token', token, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 3600,
       path: '/',
     }))
 
-    return res.json({ user, token })
+    return res.json(user)
   } catch (err) {
     
   }
